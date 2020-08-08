@@ -1,30 +1,33 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
+import Vue from 'vue'
+import VueRouter from 'vue-router'
+Vue.use(VueRouter)
 
-Vue.use(VueRouter);
+import FindMusic from '../views/findMusic'
+import SelfFM from '../views/selfFM'
+import Look from '../views/look'
+import Video from '../views/video'
 
-const routes = [
-  {
-    path: "/",
-    name: "Home",
-    component: Home
-  },
-  {
-    path: "/about",
-    name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue")
-  }
-];
-
-const router = new VueRouter({
-  mode: "history",
-  base: process.env.BASE_URL,
-  routes
-});
-
-export default router;
+export default new VueRouter({
+  routes: [
+    {
+      path: '/',
+      redirect: '/findMusic'
+    },
+    {
+      path: '/findMusic',
+      component: FindMusic
+    },
+    {
+      path: '/selfFM',
+      component: SelfFM
+    },
+    {
+      path: '/look',
+      component: Look
+    },
+    {
+      path: '/video',
+      component: Video
+    }
+  ]
+})
