@@ -1,5 +1,5 @@
 import Vue from "vue";
-import App from "./App.vue";
+import App from "@/App.vue";
 import router from "./router";
 import store from "./store";
 import './assets/css/reset.scss';
@@ -19,9 +19,13 @@ Vue.use(vuescroll, {
 });
 
 import {
-  Input 
+  Input,
+  Carousel,
+  CarouselItem 
 } from 'element-ui';
 Vue.use(Input)
+Vue.use(Carousel)
+Vue.use(CarouselItem)
 
 Vue.config.productionTip = false;
 

@@ -1,20 +1,20 @@
 <template>
   <div class="nav-bar">
-    <div class="box">
+    <div class="nav-bar-box">
       <div class="bar-title">推荐</div>
-      <div class="music-list" :class="[nowPath === '/findMusic' ? 'checked' : '']"  @click="() => toPath('/findMusic')">
+      <div class="music-list" :class="[path === 'discoverMusic' ? 'checked' : '']"  @click="() => toPath('/discoverMusic')">
         <div class="iconfont">&#xe625;</div>
         <div class="text">发现音乐</div>
       </div>
-      <div class="music-list" :class="[nowPath === '/selfFM' ? 'checked' : '']" @click="() => toPath('/selfFM')">
+      <div class="music-list" :class="[path === 'selfFM' ? 'checked' : '']" @click="() => toPath('/selfFM')">
         <div class="iconfont">&#xe725;</div>
         <div class="text">私人FM</div>
       </div>
-      <div class="music-list" :class="[nowPath === '/look' ? 'checked' : '']" @click="() => toPath('/look')">
+      <div class="music-list" :class="[path === 'look' ? 'checked' : '']" @click="() => toPath('/look')">
         <div class="iconfont">&#xe69f;</div>
         <div class="text">LOOK直播</div>
       </div>
-      <div class="music-list" :class="[nowPath === '/video' ? 'checked' : '']" @click="() => toPath('/video')">
+      <div class="music-list" :class="[path === 'video' ? 'checked' : '']" @click="() => toPath('/video')">
         <div class="iconfont">&#xe634;</div>
         <div class="text">视频</div>
       </div>
@@ -23,7 +23,7 @@
         <div class="text">朋友</div>
       </div>
     </div>
-    <div class="box">
+    <div class="nav-bar-box">
       <div class="bar-title">我的音乐</div>
       <div class="music-list">
         <div class="iconfont">&#xe6a0;</div>
@@ -34,7 +34,7 @@
         <div class="text">下载管理</div>
       </div>
     </div>
-    <div class="box">
+    <div class="nav-bar-box">
       <div class="bar-title">创建的歌单</div>
       <div class="music-list">
         <div class="iconfont">&#xe60f;</div>
@@ -48,16 +48,19 @@
 export default {
   data(){
     return {
-      nowPath: this.$route.path
+      path: this.$route.path.split('/')[1]
     }
   },
   mounted(){
     // console.log('route',this.$route.path)
   },
   methods: {
-    toPath(param){
-      this.$router.push({path: param})
-      this.nowPath = this.$route.path
+    toPath(path){
+      if(this.path === path.split('/')[1]){       //防止多次点击同一个bar产生多次请求和渲染
+        return 
+      }
+      this.$router.push({path})
+      this.path = this.$route.path.split('/')[1]
       // console.log(this.$route.path)
     }
   }
@@ -66,6 +69,9 @@ export default {
 
 <style lang="scss">
 .nav-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 200px;
   height: 100%;
   border-right: #e1e1e2 solid 1px;
@@ -73,7 +79,7 @@ export default {
   color: rgb(37,37,37,0.8);
   font-size: 12px;
 
-  .box {
+  .nav-bar-box {
     display: flex;
     flex-direction: column;
 

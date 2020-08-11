@@ -10,6 +10,10 @@ export default {
 
 <style lang="scss">
 .nav-player {
+  z-index: 1000;
+  position: fixed;
+  bottom: 0;
+  left: 0;
   width: 100%;
   height: 50px;
   border-top: #e1e1e2 solid 1px;

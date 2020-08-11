@@ -1,7 +1,5 @@
 <template>
-  <div>
-    hahaahahha
-  </div>
+  <div>singer</div>
 </template>
 
 <script>

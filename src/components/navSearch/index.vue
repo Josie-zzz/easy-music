@@ -1,12 +1,8 @@
 <template>
   <div class="nav-search">
     <div class="left">
-      <img src="../../../assets/img/logo.png" alt="logo">
+      <img src="@/assets/img/logo.png" alt="logo">
       <div class="text">Easy Music</div>
-      <div class="back-forward">
-        <div class="iconfont">&#xe61c;</div>
-        <div class="iconfont">&#xe61b;</div>
-      </div>
       <div class="input-box">
         <el-input
           class="inline-input"
@@ -21,7 +17,7 @@
       
     </div>
     <div class="right">
-      <img src="../../../assets/img/avater.png" alt="logo">
+      <img src="@/assets/img/avater.png" alt="logo">
       <div class="status">
         <span>未登录</span>
         <i class="el-icon-caret-bottom"></i>
@@ -100,7 +96,7 @@
 import { 
   _getHotSearch,
   _getSuggest
-} from '../../../ajax/search'
+} from '@/ajax/search'
 
 export default {
   data() {
@@ -175,7 +171,7 @@ export default {
               this.songs = arr
             }
             if(result.albums){
-              console.log(result.albums)
+              // console.log(result.albums)
               let arr = []
               
               result.albums.forEach(album => {
@@ -215,7 +211,6 @@ export default {
 .nav-search {
   display: flex;
   flex-direction: row;
-  align-items: center;
   justify-content: space-between;
   position: relative;
   width: 100%;
@@ -239,30 +234,6 @@ export default {
       color: #fff;      
     }
 
-    .back-forward {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      width: 50px;
-      height: 25px;
-      margin-left: 70px;
-      border:rgba(0, 0, 0, 0.1) solid 1px;
-      border-radius: 4px;
-
-      .iconfont {
-        display: inline-block;
-        width: 25px;
-        font-size: 12px;
-        font-weight: 800;
-        text-align: center;
-        color: rgba(255, 255, 255, 0.5);
-
-        &:hover {
-          cursor: pointer;
-        }
-      }
-    }
-
     .input-box {
       position: relative;
 
@@ -281,7 +252,7 @@ export default {
     }
 
     .inline-input {
-      margin-left: 10px;
+      margin-left: 125px;
       width: 220px;
 
       .el-input__inner {
@@ -356,6 +327,7 @@ export default {
     position: absolute;
     top: 50px;
     left: 252px;
+    z-index: 1000;
     background-color: #fff;
     box-shadow: 0px 0px 10px 0px rgb(0,0,0,0.1);
 

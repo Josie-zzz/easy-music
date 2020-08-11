@@ -3,7 +3,7 @@ import http from './http'
 // 获取热搜信息
 export function _getHotSearch(){
   return http({
-    url: 'search/hot/detail',
+    url: 'search/hot/detail'
   })
 }
 
