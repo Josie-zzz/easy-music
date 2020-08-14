@@ -3,7 +3,7 @@
     <div class="nav-bar-box">
       <div class="bar-title">推荐</div>
       <div class="music-list" :class="[path === 'discoverMusic' ? 'checked' : '']"  @click="() => toPath('/discoverMusic')">
-        <div class="iconfont">&#xe625;</div>
+        <div class="iconfont">&#xe602;</div>
         <div class="text">发现音乐</div>
       </div>
       <div class="music-list" :class="[path === 'selfFM' ? 'checked' : '']" @click="() => toPath('/selfFM')">

@@ -21,11 +21,15 @@ Vue.use(vuescroll, {
 import {
   Input,
   Carousel,
-  CarouselItem 
+  CarouselItem,
+  Button,
+  Pagination
 } from 'element-ui';
 Vue.use(Input)
 Vue.use(Carousel)
 Vue.use(CarouselItem)
+Vue.use(Button)
+Vue.use(Pagination)
 
 Vue.config.productionTip = false;
 

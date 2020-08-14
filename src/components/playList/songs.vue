@@ -33,13 +33,7 @@
 
 <script>
 export default {
-  props: ['songs'],
-  created(){
-    // console.log('songs:',this.songs)
-  },
-  mounted(){
-    console.log(this.songs)
-  }
+  props: ['songs']
 }
 </script>
 

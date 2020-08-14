@@ -10,7 +10,7 @@
     <div class="songList">
       <div class="title">
         <div style="font-size: 18px">推荐歌单</div>
-        <div class="more">更多></div>
+        <!-- <div class="more">更多></div> -->
       </div>
       <div class="songListBox">
         <div class="songBox" v-for="(per, index) in personalized" :key="'per' + index" @click="showPlayList(per.id)">
@@ -27,7 +27,7 @@
     <div class="privateContent">
       <div class="title">
         <div style="font-size: 18px">独家放送</div>
-        <div class="more">更多></div>
+        <!-- <div class="more">更多></div> -->
       </div>
       <div class="priConBox">
         <div class="priBox" v-for="(pri, index) in privateContent" :key="'pri' + index">
@@ -40,7 +40,7 @@
     <div class="newSong">
       <div class="title">
         <div style="font-size: 18px">最新音乐</div>
-        <div class="more">更多></div>
+        <!-- <div class="more">更多></div> -->
       </div>
       <div class="newSongBox">
         <div class="songBoxOne" v-for="(nSong, i) in newSong" :key="'n' + i">
@@ -67,7 +67,7 @@
     <div class="getMv">
       <div class="title">
         <div style="font-size: 18px">推荐MV</div>
-        <div class="more">更多></div>
+        <!-- <div class="more">更多></div> -->
       </div>
       <div class="getMvBox">
         <div class="mvBox" v-for="(mv, index) in getMV" :key="'getmv' + index">
@@ -115,10 +115,10 @@ export default {
     })
 
     //请求歌单
-    _getPersonalized().then(res => {
+    _getPersonalized(10).then(res => {
       // console.log(res.data)
       if(res.data.code === 200){
-        //出理显示听歌单人数的输出格式
+        //处理显示听歌单人数的输出格式
         res.data.result.forEach(val => {
           val.playCount = val.playCount < 100000 ? val.playCount : Math.floor(val.playCount/10000) + '万'
         });
@@ -194,23 +194,23 @@ export default {
   flex-direction: column;
 
   .title {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: flex-end;
-      padding: 8px 0;
-      border-bottom: solid 1px #e1e1e2;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 8px 0;
+    border-bottom: solid 1px #e1e1e2;
 
-      .more {
-        font-size: 12px;
-        color:rgb(37,37,37,0.8);
+    .more {
+      font-size: 12px;
+      color:rgb(37,37,37,0.8);
 
-        &:hover {
-          cursor: pointer;
-          color: #000;
-        }
+      &:hover {
+        cursor: pointer;
+        color: #000;
       }
     }
+  }
 
   .songList {
     .songListBox {
@@ -293,6 +293,8 @@ export default {
   }
 
   .newSong {
+    margin-bottom: 50px;
+
     .newSongBox {
       width: 100%;
       padding-top: 15px;

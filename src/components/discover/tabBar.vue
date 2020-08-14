@@ -68,7 +68,7 @@ export default {
 }
 .checked2::after {
   position: absolute;
-  top: 100%;
+  bottom: 0;
   left: 0;
   width: 100%;
   border-bottom: #c62f2f solid 2px;

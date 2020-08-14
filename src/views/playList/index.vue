@@ -7,11 +7,11 @@
           <img class="avater"  :src="playTitle.coverImgUrl">
           <div class="playRight">
             <div class="play1">
-              <div class="playtxt"> 
+              <div class="playtxt1" style="width:650px;"> 
                 <div style="font-size: 12px;color: #cf2f2f;border: 1px solid #cf2f2f;width: 35px;height: 20px;text-align: center;border-radius: 2px;margin-right: 5px;">歌单</div>
                 <div style="font-size: 22px;">{{ playTitle.name }}</div>
               </div>
-              <div class="playtxt" style="font-size: 12px;color: rgb(37,37,37,0.5);text-align: end;">
+              <div class="playtxt2" style="font-size: 12px;color: rgb(37,37,37,0.5);text-align: end;">
                 <div style="padding: 0 10px;border-right: 1px solid rgb(37,37,37,0.5);">
                   <div>歌曲数</div>
                   <div style="font-weight:600">{{ playTitle.trackCount }}</div>
@@ -50,7 +50,7 @@
             <li :class="[currentCom === 'Subscribers' ? 'checked2' : '']" @click="() => switchTo('Subscribers')">收藏者</li>
           </ul>
           <keep-alive>
-            <component v-bind:is="currentCom" :songs="songs"></component>
+            <component v-bind:is="currentCom" :songs="songs" :id="id"></component>
           </keep-alive>
         </div>
       </div>
@@ -65,7 +65,7 @@ import Comments from '@/components/playList/comments'
 import Subscribers from '@/components/playList/subscribers'
 import {
   _getPlayList,
-  _getSongDetail
+  _getSongDetail,
 } from '@/ajax/discover'
 
 export default {
@@ -77,6 +77,7 @@ export default {
       currentCom: 'Songs',                    //当前显示的组件
       trackIds: null,                         //当前歌单的所有歌曲的id的对象列表
       songs: null,                            //储存当前歌单所有歌曲详细信息
+      
     }
   },
   components: {
@@ -85,13 +86,14 @@ export default {
     Subscribers
   },
   created(){
+    //获取歌单详细信息，并根据其中歌曲id列表获得所有歌曲详细信息
     this.getPlayListAll()
   },
   methods: {
     switchTo(com){
       this.currentCom = com
     },
-    async getPlayListAll(){                        //获取歌单所有信息
+    async getPlayListAll(){                      //获取歌单所有信息
       //获取歌单详细信息，并储存歌单列表
       if(this.id){
         await _getPlayList(this.id).then(res => {
@@ -153,7 +155,7 @@ export default {
     transCount(count){                         //处理播放数格式
       return count < 100000 ? count : Math.floor(count / 10000) + '万'
     },
-    transTags(tags){
+    transTags(tags){                           //拼接所有tags标签
       let str = ''
       let len = tags.length
       tags.forEach((val, index) => {
@@ -164,7 +166,7 @@ export default {
       })
       return str
     },
-    processSongs(oldSongs){
+    processSongs(oldSongs){                    //处理歌曲对象的信息
       let newSongs = []
       oldSongs.forEach((val, index) => {
         index = index + 1
@@ -179,9 +181,9 @@ export default {
         newSongs.push(obj)
       })
       this.songs = newSongs
-      console.log(this.songs)
+      // console.log(this.songs)
     },
-    transSinger(ar){
+    transSinger(ar){                           //拼接所有歌手
       let str = ''
       let len = ar.length
       ar.forEach((val, index) => {
@@ -193,7 +195,7 @@ export default {
       })
       return str
     },
-    transTimeLen(time){
+    transTimeLen(time){                        //处理时长输出格式
       time = Math.floor(time / 1000)
       let min = Math.floor(time / 60)
       let se = time % 60
@@ -232,9 +234,16 @@ export default {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        height: 40px;
+        align-items: flex-start;
+        margin-bottom: 15px;
 
-        .playtxt {
+        .playtxt1 {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+        }
+
+        .playtxt2 {
           display: flex;
           flex-direction: row;
           align-items: center;
@@ -245,6 +254,7 @@ export default {
         display: flex;
         flex-direction: row;
         align-items: center;
+        margin-bottom: 15px;
 
         .creator {
           width: 30px;
@@ -255,7 +265,7 @@ export default {
       }
 
       .play3 {
-        margin: 15px 0;
+        margin-bottom: 15px;
         font-size: 12px;
         color: rgb(37,37,37);
 

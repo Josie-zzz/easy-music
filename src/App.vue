@@ -18,7 +18,6 @@ import NavSearch from '@/components/navSearch'
 
 export default {
   components: {
-    // Content,
     NavBar,
     NavPlayer,
     NavSearch
