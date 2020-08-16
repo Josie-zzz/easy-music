@@ -10,13 +10,13 @@
         <div class="iconfont">&#xe725;</div>
         <div class="text">私人FM</div>
       </div>
-      <div class="music-list" :class="[path === 'look' ? 'checked' : '']" @click="() => toPath('/look')">
-        <div class="iconfont">&#xe69f;</div>
-        <div class="text">LOOK直播</div>
-      </div>
       <div class="music-list" :class="[path === 'video' ? 'checked' : '']" @click="() => toPath('/video')">
         <div class="iconfont">&#xe634;</div>
         <div class="text">视频</div>
+      </div>
+      <div class="music-list" :class="[path === 'look' ? 'checked' : '']" @click="() => toPath('/look')">
+        <div class="iconfont">&#xe69f;</div>
+        <div class="text">LOOK直播</div>
       </div>
       <div class="music-list">
         <div class="iconfont">&#xe6df;</div>

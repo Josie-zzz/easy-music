@@ -44,11 +44,13 @@
         </div>
         <!-- 歌单下面呢详细信息 -->
         <div class="playInfo">
-          <ul class="playList-bar">
-            <li :class="[currentCom === 'Songs' ? 'checked2' : '']"  @click="() => switchTo('Songs')">歌曲列表</li>
-            <li :class="[currentCom === 'Comments' ? 'checked2' : '']" @click="() => switchTo('Comments')">评论{{ commentCount }}</li>
-            <li :class="[currentCom === 'Subscribers' ? 'checked2' : '']" @click="() => switchTo('Subscribers')">收藏者</li>
-          </ul>
+          <div>
+            <ul class="playList-bar">
+              <li :class="[currentCom === 'Songs' ? 'checked2' : '']"  @click="() => switchTo('Songs')">歌曲列表</li>
+              <li :class="[currentCom === 'Comments' ? 'checked2' : '']" @click="() => switchTo('Comments')">评论{{ commentCount }}</li>
+              <li :class="[currentCom === 'Subscribers' ? 'checked2' : '']" @click="() => switchTo('Subscribers')">收藏者</li>
+            </ul>
+          </div>
           <keep-alive>
             <component v-bind:is="currentCom" :songs="songs" :id="id"></component>
           </keep-alive>
@@ -117,7 +119,7 @@ export default {
       //根据歌单列表请求所有歌曲
       _getSongDetail(trackIds).then(res => {
         if(res.data.code === 200){
-          // console.log(res)
+          // console.log('res.data.songs', res.data.songs)
           //处理songs的信息再储存
           this.processSongs(res.data.songs)
         }
@@ -173,7 +175,7 @@ export default {
         let obj = {
           index: index < 10 ? '0' + index : index,
           musicTitle: val.name,
-          musicAlia: val.alia[0],
+          musicAlia: val.alia[0] ? val.alia[0] : '',
           singers: this.transSinger(val.ar),
           album: val.al.name,
           timeLen: this.transTimeLen(val.dt)
@@ -301,17 +303,22 @@ export default {
   .playInfo {
     width: 100%;
 
-    .playList-bar li {
-      display: inline-block;
-      margin-left: 80px;
-      font-size: 14px;
-      line-height: 34px;
+    .playList-bar {
+      width: 1000px;
+      margin: 0 auto;
 
-      &:hover {
-        color: #cf2f2f;
-        cursor: pointer;
+      li {
+        display: inline-block;
+        margin-left: 80px;
+        font-size: 14px;
+        line-height: 34px;
+
+        &:hover {
+          color: #cf2f2f;
+          cursor: pointer;
+        }
       }
-    }
+    } 
   }
 }
 </style>

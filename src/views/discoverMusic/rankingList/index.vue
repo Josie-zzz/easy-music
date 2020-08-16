@@ -48,7 +48,6 @@ export default {
   },
   created(){
     this.getRankingList()
-    this.getRankingArtist()
   },
   methods: {
     async getRankingList(){                           //请求全部排行榜和对应下面八首歌曲

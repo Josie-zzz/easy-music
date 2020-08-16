@@ -3,10 +3,10 @@
     <ul>
       <li :class="[path === 'recommend' ? 'checked2' : '']"  @click="() => toPath('recommend')">个性推荐</li>
       <li :class="[path === 'songList' ? 'checked2' : '']" @click="() => toPath('songList')">歌单</li>
-      <li :class="[path === 'anchor' ? 'checked2' : '']" @click="() => toPath('anchor')">主播电台</li>
       <li :class="[path === 'rankingList' ? 'checked2' : '']" @click="() => toPath('rankingList')">排行榜</li>
       <li :class="[path === 'singer' ? 'checked2' : '']" @click="() => toPath('singer')">歌手</li>
       <li :class="[path === 'newMusic' ? 'checked2' : '']" @click="() => toPath('newMusic')">最新音乐</li>
+      <!-- <li :class="[path === 'anchor' ? 'checked2' : '']" @click="() => toPath('anchor')">主播电台</li> -->
     </ul>
   </div>
 </template>

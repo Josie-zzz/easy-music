@@ -41,6 +41,7 @@ export default {
       currentTag: '全部',            //当前被选中的标签
       songList: null,                //换页或者标签都会替换这个数组
       currentPage: 1,                //当前页码
+      limit: 100,                     //限制每页数量，主要用于请求，写在这里比较方便
     }
   },
   created(){
@@ -55,15 +56,15 @@ export default {
     })
 
     //根据标签请求歌单
-    this.getTopPlayList(this.currentTag, (this.currentPage - 1))
+    this.getTopPlayList(this.currentTag, (this.currentPage - 1) * this.limit)
   },
   methods: {
     currentChange(page){                                          //当页码变化的时候处理的事件
       this.currentPage = page
       this.songList = null
-      this.getTopPlayList(this.currentTag, (page - 1))
+      this.getTopPlayList(this.currentTag, (page - 1) * this.limit)
     },
-    getTopPlayList(cat, offset, limit = 100){        //根据当前信息请求当前显示歌单
+    getTopPlayList(cat, offset, limit = this.limit){        //根据当前信息请求当前显示歌单
       _getTopPlayList(cat, offset, limit).then(res => {
         if(res.data.code === 200){
           // console.log(res.data)
@@ -85,7 +86,7 @@ export default {
       this.currentTag = tag
       this.songList = null
       this.currentPage = 1
-      this.getTopPlayList(this.currentTag, (this.currentPage - 1))
+      this.getTopPlayList(this.currentTag, (this.currentPage - 1) * this.limit)
       console.log(this.currentTag)
     },
     showPlayList(id){

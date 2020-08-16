@@ -15,6 +15,7 @@ import Look from '@/views/look'
 import Video from '@/views/video'
 
 import PlayList from '@/views/playList'
+import Artist from '@/views/artist'
 
 export default new VueRouter({
   routes: [
@@ -72,6 +73,11 @@ export default new VueRouter({
       path: '/playList',
       name: 'playList',
       component: PlayList
+    },
+    {
+      path: '/artist',
+      name: 'artist',
+      component: Artist
     }
   ]
 })
