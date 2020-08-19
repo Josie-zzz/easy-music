@@ -72,11 +72,9 @@ export default {
     },
     getArtistSongs(){
       _getArtistSongs(this.id).then(res => {
-        if(res.data.code === 200){
-           // console.log(res.data)
-          this.artist = res.data.artist
-          this.hotSongs = res.data.hotSongs
-        }
+        // console.log(res.data)
+        this.artist = res.data.artist
+        this.hotSongs = res.data.hotSongs
       }).catch(res => {
         console.log('获取此歌手热门歌曲失败！', res)
       })

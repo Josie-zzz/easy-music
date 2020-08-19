@@ -47,10 +47,8 @@ export default {
   created(){
     //请求热门tags
     _getListHotTags().then(res => {
-      if(res.data.code === 200){
-        // console.log(res.data.tags)
-        this.tags = res.data.tags
-      }
+      // console.log(res.data.tags)
+      this.tags = res.data.tags
     }).catch(res => {
       console.log('请求热门标签失败！', res)
     })
@@ -66,15 +64,13 @@ export default {
     },
     getTopPlayList(cat, offset, limit = this.limit){        //根据当前信息请求当前显示歌单
       _getTopPlayList(cat, offset, limit).then(res => {
-        if(res.data.code === 200){
-          // console.log(res.data)
-          //处理显示听歌单人数的输出格式
-          res.data.playlists.forEach(val => {
-            val.playCount = val.playCount < 100000 ? val.playCount : Math.floor(val.playCount/10000) + '万'
-          });
-          // 保存当前请求的数据
-          this.songList = res.data.playlists
-        }
+        // console.log(res.data)
+        //处理显示听歌单人数的输出格式
+        res.data.playlists.forEach(val => {
+          val.playCount = this.$transPlayCount(val.playCount)
+        });
+        // 保存当前请求的数据
+        this.songList = res.data.playlists
       }).catch(res => {
         console.log('请求精选歌单失败！', res)
       })
@@ -87,7 +83,7 @@ export default {
       this.songList = null
       this.currentPage = 1
       this.getTopPlayList(this.currentTag, (this.currentPage - 1) * this.limit)
-      console.log(this.currentTag)
+      // console.log(this.currentTag)
     },
     showPlayList(id){
       this.$router.push({

@@ -52,15 +52,13 @@ export default {
   methods: {
     async getRankingList(){                           //请求全部排行榜和对应下面八首歌曲
       await _getRankingList().then(res => {
-        if(res.data.code === 200){
-          // console.log(res.data.list)
-          //处理显示听歌单人数的输出格式
-          res.data.list.forEach(val => {
-            val.playCount = val.playCount < 100000 ? val.playCount : Math.floor(val.playCount/10000) + '万'
-          });
-          this.rankingOne = res.data.list.slice(0, 4)
-          this.rankingTwo = res.data.list.slice(4)
-        }
+        // console.log(res.data.list)
+        //处理显示听歌单人数的输出格式
+        res.data.list.forEach(val => {
+          val.playCount = this.$transPlayCount(val.playCount)
+        });
+        this.rankingOne = res.data.list.slice(0, 4)
+        this.rankingTwo = res.data.list.slice(4)
       }).catch(res => {
         console.log('请求排行榜失败！', res)
       })

@@ -6,6 +6,69 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "6997336",
+      "name": "单曲循环",
+      "font_class": "danquxunhuan",
+      "unicode": "e60c",
+      "unicode_decimal": 58892
+    },
+    {
+      "icon_id": "40700",
+      "name": "顺序播放",
+      "font_class": "ttpodicon",
+      "unicode": "e648",
+      "unicode_decimal": 58952
+    },
+    {
+      "icon_id": "12036444",
+      "name": "上一首",
+      "font_class": "shangyishou",
+      "unicode": "e610",
+      "unicode_decimal": 58896
+    },
+    {
+      "icon_id": "12036446",
+      "name": "播放",
+      "font_class": "bofang",
+      "unicode": "e611",
+      "unicode_decimal": 58897
+    },
+    {
+      "icon_id": "12036449",
+      "name": "下一首",
+      "font_class": "xiayishou",
+      "unicode": "e612",
+      "unicode_decimal": 58898
+    },
+    {
+      "icon_id": "12036454",
+      "name": "随机05",
+      "font_class": "suiji",
+      "unicode": "e613",
+      "unicode_decimal": 58899
+    },
+    {
+      "icon_id": "12036455",
+      "name": "循环01",
+      "font_class": "xunhuan",
+      "unicode": "e614",
+      "unicode_decimal": 58900
+    },
+    {
+      "icon_id": "12036460",
+      "name": "音频列表",
+      "font_class": "yinpinliebiao",
+      "unicode": "e615",
+      "unicode_decimal": 58901
+    },
+    {
+      "icon_id": "12036462",
+      "name": "暂停",
+      "font_class": "zanting",
+      "unicode": "e616",
+      "unicode_decimal": 58902
+    },
+    {
       "icon_id": "12063495",
       "name": "音乐",
       "font_class": "cat-4",
@@ -48,32 +111,11 @@
       "unicode_decimal": 60749
     },
     {
-      "icon_id": "8106230",
-      "name": "nextsong",
-      "font_class": "nextsong",
-      "unicode": "e69d",
-      "unicode_decimal": 59037
-    },
-    {
-      "icon_id": "8106237",
-      "name": "play",
-      "font_class": "play",
-      "unicode": "e69e",
-      "unicode_decimal": 59038
-    },
-    {
       "icon_id": "8106252",
       "name": "music",
       "font_class": "music",
       "unicode": "e6a0",
       "unicode_decimal": 59040
-    },
-    {
-      "icon_id": "8106273",
-      "name": "timeout",
-      "font_class": "timeout",
-      "unicode": "e6a2",
-      "unicode_decimal": 59042
     },
     {
       "icon_id": "8776842",

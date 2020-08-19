@@ -74,10 +74,8 @@ export default {
   methods: {
     getArtistList(area, type, offset, limit = this.limit, initial = -1){
       _getArtistList(area, type, offset, limit, initial).then(res => {
-        if(res.data.code === 200){
-          // console.log(res.data.artists)
-          this.artists = res.data.artists
-        }
+        // console.log(res.data.artists)
+        this.artists = res.data.artists
       }).catch(res => {
         console.log('获取歌手分类信息失败！', res)
       })

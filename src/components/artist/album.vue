@@ -5,19 +5,22 @@
         <img :src="artist.img1v1Url">
       </div>
       <div class="right">
-        <div style="font-size: 14px;margin-bottom: 10px;">热门50首</div>
+        <div class="title">
+          <span>热门50首</span>
+          <span class="iconfont" @click="addSongListToList(newHotSongs)">&#xe611;</span>
+        </div>
         <table class="songs">
-          <tr v-for="(hotSong, index) in newHotSongs" :key="'hotSong' + index">
+          <tr v-for="(hotSong, index) in newHotSongs" :key="'hotSong' + index" @dblclick="addSongToList(hotSong)">
             <td style="width:36px;text-align:right;">{{ hotSong.index }}</td>
             <td class="iconfont" style="width:60px;">
               <span style="margin-right:5px;">&#xe60f;</span>
               <span>&#xe63a;</span>
             </td>
             <td style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">
-              <span style="color:#000;margin-right:5px;">{{ hotSong.musicTitle }}</span>
-              <span>{{ hotSong.musicAlia }}</span>
+              <span style="color:#000;margin-right:5px;">{{ hotSong.name }}</span>
+              <span>{{ hotSong.alia }}</span>
             </td>
-            <td style="width:100px;">{{ hotSong.timeLen }}</td>
+            <td style="width:100px;">{{ hotSong.duration }}</td>
           </tr>
         </table>
       </div>
@@ -28,20 +31,23 @@
           <img :src="albumInfo.album.picUrl">
           <div style="font-size: 12px;margin-top: 10px;">{{ albumInfo.album.newPublishTime }}</div>
         </div>
-        <div class="right">
-          <div style="font-size: 14px;margin-bottom: 10px;">{{ albumInfo.album.name }}</div>
+        <div class="right"> 
+          <div class="title">
+            <span>{{ albumInfo.album.name }}</span>
+            <span class="iconfont" @click="addSongListToList(albumInfo.newSongs)">&#xe611;</span>
+          </div>
           <table class="songs">
-            <tr v-for="(albSong, index) in albumInfo.newSongs" :key="'albSong' + index">
+            <tr v-for="(albSong, index) in albumInfo.newSongs" :key="'albSong' + index" @dblclick="addSongToList(albSong)">
               <td style="width:36px;text-align:right;">{{ albSong.index }}</td>
               <td class="iconfont" style="width:60px;">
                 <span style="margin-right:5px;">&#xe60f;</span>
                 <span>&#xe63a;</span>
               </td>
               <td style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">
-                <span style="color:#000;margin-right:5px;">{{ albSong.musicTitle }}</span>
-                <span>{{ albSong.musicAlia }}</span>
+                <span style="color:#000;margin-right:5px;">{{ albSong.name }}</span>
+                <span>{{ albSong.alia }}</span>
               </td>
-              <td style="width:100px;">{{ albSong.timeLen }}</td>
+              <td style="width:100px;">{{ albSong.duration }}</td>
             </tr>
           </table>
         </div>
@@ -98,26 +104,22 @@ export default {
   methods: {
     async getArtistAlbumsAll(id, offset, limit = this.limit){                    
       await _getArtistAlbums(id, offset, limit).then(res => {               //获取专辑id
-        if(res.data.code === 200){
-          // console.log(res.data.hotAlbums)
-          let albumId = []
-          res.data.hotAlbums.forEach(val => {
-            albumId.push(val.id)
-          })
-          this.albumId = albumId
-        }
+        // console.log(res.data.hotAlbums)
+        let albumId = []
+        res.data.hotAlbums.forEach(val => {
+          albumId.push(val.id)
+        })
+        this.albumId = albumId
       }).catch(res => {
         console.log('获取此歌手专辑id失败！', res)
       })
       // console.log(this.albumId)
       this.albumId.forEach(id => {
         _getArtistAlbumsAll(id).then(res => {               //获取专辑详细信息
-          if(res.data.code === 200){
-            // console.log(res.data)
-            res.data.newSongs = []                          //给此对象创建一个新的属性储存处理好格式的此专辑的所有歌曲
-            this.processAlbumSongs(res.data)                //处理歌曲和转换时间
-            this.albumInfos.push(res.data)
-          }
+          // console.log(res.data)
+          res.data.newSongs = []                          //给此对象创建一个新的属性储存处理好格式的此专辑的所有歌曲
+          this.processAlbumSongs(res.data)                //处理歌曲和转换时间
+          this.albumInfos.push(res.data)
         }).catch(res => {
           console.log('获取此歌手专辑详细信息失败！', res)
         })
@@ -125,15 +127,10 @@ export default {
       
     },
     processAlbumSongs(data){                               
-      this.transDate(data.album)
+      data.album.newPublishTime = this.$transDate(data.album.publishTime)
       data.songs.forEach((val, index) => {                    //处理每一个专辑的歌曲信息格式，并将新的信息存入data对象，也就是他原来的对象新增了一个属性，和热门歌曲的方式不一样
         data.newSongs.push(this.processSong(val, index))
       })
-    },
-    transDate(album){
-      let d = new Date(album.publishTime)
-      let time = `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`
-      album.newPublishTime = time
     },
     processHotSongs(hotSongs){
       hotSongs.forEach((val, index) => {
@@ -143,27 +140,40 @@ export default {
     processSong(val, index){
       index = index + 1
       let obj = {
-        index: index < 10 ? '0' + index : index,
-        musicTitle: val.name,
-        musicAlia: val.alia[0] ? val.alia[0] : '',
-        timeLen: this.transTimeLen(val.dt)
+        id: val.id,
+        index: this.$addZero(index),
+        name: val.name,
+        alia: val.alia[0] ? val.alia[0] : '',
+        singers: this.$transSinger(val.ar),
+        duration: this.$transDuration(val.dt)
       }
 
       return obj
-    },
-    transTimeLen(time){                        //处理时长输出格式
-      time = Math.floor(time / 1000)
-      let min = Math.floor(time / 60)
-      let se = time % 60
-      min = min < 10 ? '0' + min : min
-      se = se < 10 ? '0' + se : se
-      return min + ':' + se
     },
     currentChange(page){                                  //当页码发生变化
       this.currentPage = page
       this.albumInfos = []
       this.getArtistAlbumsAll(this.id, (page - 1) * this.limit)
     },
+    addSongToList(song){
+      // console.log(song)
+      this.$store.commit('addSong', song)
+    },
+    addSongListToList(songList){
+      this.$MessageBox.confirm('点击全部播放会替换掉当前播放列表，是否继续？', '替换播放列表', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$store.commit('addSongList', songList)
+        this.$Message({
+          type: 'success',
+          message: '替换成功'
+        });
+      }).catch(() => {
+        console.log('取消被点击了')
+      })
+    }
   }
 }
 </script>
@@ -193,6 +203,24 @@ export default {
 
     .right {
       flex: 1;
+
+      .title {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        font-size: 14px;
+        margin-bottom: 10px;
+
+        .iconfont {
+          font-size: 18px;
+          color: rgba(37, 37, 37, 0.6);
+
+          &:hover {
+            cursor: pointer;
+            color: #000;
+          }
+        }
+      }
 
       .songs {
         table-layout: fixed;

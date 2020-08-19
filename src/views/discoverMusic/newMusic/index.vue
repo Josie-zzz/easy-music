@@ -3,26 +3,27 @@
     <ul class="tags">
       <li v-for="(tag, index) in areaTags" :key="'tag' + index" :class="[tag.param === type ? 'checked5' : '']" @click="changeTags(tag.param)">{{ tag.name }}</li>
     </ul>
-    <div class="newMusicList">
-      <table v-if="newMusic.length" class="newMusicTable">
-        <tr v-for="(music, index) in newMusic" :key="'music' + index">
+    <div class="newMusicList" v-if="newMusic.length">
+      <div class="iconfont palyAll" @click="addSongListToList(newMusic)">&#xe611;播放全部</div>
+      <table class="newMusicTable">
+        <tr v-for="(music, index) in newMusic" :key="'music' + index" @dblclick="addSongToList(music)">
           <td style="width: 46px;text-align: center;">{{ music.index }}</td>
           <td style="width: 60px;">
             <div class="songPic">
               <img :src="music.picUrl">
-              <div class="iconfont">&#xe6a2;</div>
+              <div class="iconfont">&#xe611;</div>
             </div>
           </td>
           <td>
-            <span style="color:#000;">{{ music.musicTitle }}</span>
-            <span>{{ music.musicAlia }}</span>
+            <span style="color:#000;">{{ music.name }}</span>
+            <span>{{ music.alia }}</span>
           </td>
           <td style="width: 200px;">{{ music.singers }}</td>
           <td style="width:250px;">
             <span>{{ music.album }}</span>
             <span>{{ music.albumAlia }}</span>
           </td>
-          <td style="width:80px;">{{ music.timeLen }}</td>
+          <td style="width:80px;">{{ music.duration }}</td>
         </tr>
       </table>
     </div>
@@ -56,12 +57,10 @@ export default {
   methods: {
     getTopSongs(type){
       _getTopSongs(type).then(res => {
-        if(res.data.code === 200){
-          // console.log(res.data.data)
-          res.data.data.forEach((val, index) => {
-            this.newMusic.push(this.processTopSongs(val, index))
-          })
-        }
+        // console.log(res.data.data)
+        res.data.data.forEach((val, index) => {
+          this.newMusic.push(this.processTopSongs(val, index))
+        })
       }).catch(res => {
         console.log('获取新歌速递失败！', res)
       })
@@ -69,42 +68,42 @@ export default {
     processTopSongs(val, index){
       index = index + 1
       let obj = {
-        index: index < 10 ? '0' + index : index,
+        id: val.id,
+        index: this.$addZero(index),
         picUrl: val.album.picUrl,
-        musicTitle: val.name,
-        musicAlia: val.alias[0] ? val.alias[0] : '',
-        singers: this.transSinger(val.artists),
+        name: val.name,
+        alia: val.alias[0] ? val.alias[0] : '',
+        singers: this.$transSinger(val.artists),
         album: val.album.name,
         albumAlia: val.album.alias[0] ? val.album.alias[0] : '',
-        timeLen: this.transTimeLen(val.duration)
+        duration: this.$transDuration(val.duration)
       }
 
       return obj
-    },
-    transSinger(ar){                           //拼接所有歌手
-      let str = ''
-      let len = ar.length
-      ar.forEach((val, index) => {
-        let name = val.name
-        if(index < len - 1){
-          name = name + '/'
-        }
-        str = str + name
-      })
-      return str
-    },
-    transTimeLen(time){                        //处理时长输出格式
-      time = Math.floor(time / 1000)
-      let min = Math.floor(time / 60)
-      let se = time % 60
-      min = min < 10 ? '0' + min : min
-      se = se < 10 ? '0' + se : se
-      return min + ':' + se
     },
     changeTags(type){
       this.type = type
       this.newMusic = []
       this.getTopSongs(this.type)
+    },
+    addSongToList(song){
+      // console.log(song)
+      this.$store.commit('addSong', song)
+    },
+    addSongListToList(songList){
+      this.$MessageBox.confirm('点击全部播放会替换掉当前播放列表，是否继续？', '替换播放列表', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$store.commit('addSongList', songList)
+        this.$Message({
+          type: 'success',
+          message: '替换成功'
+        });
+      }).catch(() => {
+        console.log('取消被点击了')
+      })
     }
   }
 }
@@ -134,6 +133,20 @@ export default {
 
   .newMusicList {
     width: 100%;
+
+    .palyAll {
+      font-size: 14px;
+      display: inline-block;
+      padding: 5px;
+      background-color: #c62f2f;
+      border-radius: 4px;
+      color: #ffffff;
+      margin-bottom: 10px;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
 
     .newMusicTable {
       table-layout: fixed;

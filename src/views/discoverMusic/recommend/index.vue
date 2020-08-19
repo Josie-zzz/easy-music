@@ -44,20 +44,18 @@
       </div>
       <div class="newSongBox">
         <div class="songBoxOne" v-for="(nSong, i) in newSong" :key="'n' + i">
-          <div class="song" v-for="(song, j) in nSong" :key="'song' + j">
-            <div style="margin-left:4px;width:20px;text-align:center;">{{ i * 5 + j + 1}}</div>
+          <div class="song" v-for="(song, j) in nSong" :key="'song' + j" @dblclick="addSongToList(song)">
+            <div style="margin-left:4px;width:20px;text-align:center;">{{ song.index }}</div>
             <div class="songPic">
               <img :src="song.picUrl">
-              <div class="iconfont">&#xe6a2;</div>
+              <div class="iconfont">&#xe611;</div>
             </div>
             <div style="line-height: 20px">
               <div style="font-size:14px;">
                 <span style="margin-right: 10px;">{{ song.name }}</span>
-                <span v-if="song.song.alias[0]" style="color:rgba(37, 37, 37, 0.8);">{{ '(' +  song.song.alias[0]  + ')'}}</span>
+                <span style="color:rgba(37, 37, 37, 0.8);">{{ song.alia }}</span>
               </div>
-              <div style="font-size:12px;color:rgba(37, 37, 37, 0.8);">
-                <span v-for="(p, index) in song.song.artists" :key="'p' + index" style="margin-right: 5px;">{{p.name}}</span>
-              </div>
+              <div style="font-size:12px;color:rgba(37, 37, 37, 0.8);">{{ song.singers }}</div>
             </div>
           </div>
         </div>
@@ -107,9 +105,7 @@ export default {
     //轮播图
     _bannerOne().then(res => {
       // console.log(res)
-      if(res.data.code === 200){
-        this.banners = res.data.banners
-      }
+      this.banners = res.data.banners
     }).catch(res => {
       console.log('获取推荐的轮播图失败！', res)
     })
@@ -117,14 +113,12 @@ export default {
     //请求歌单
     _getPersonalized(10).then(res => {
       // console.log(res.data)
-      if(res.data.code === 200){
-        //处理显示听歌单人数的输出格式
-        res.data.result.forEach(val => {
-          val.playCount = val.playCount < 100000 ? val.playCount : Math.floor(val.playCount/10000) + '万'
-        });
-        // console.log('96:', this.personalized)
-        this.personalized = res.data.result
-      }
+      //处理显示听歌单人数的输出格式
+      res.data.result.forEach(val => {
+        val.playCount = this.$transPlayCount(val.playCount)
+      });
+      // console.log('96:', this.personalized)
+      this.personalized = res.data.result
     }).catch(res => {
       console.log('请求歌单失败！', res)
     })
@@ -132,10 +126,8 @@ export default {
     //独家放送
     _privateContent().then(res => {
       // console.log(res)
-      if(res.data.code === 200){
-        this.privateContent = res.data.result
-        // console.log(this.privateContent)
-      }
+      this.privateContent = res.data.result
+      // console.log(this.privateContent)
     }).catch(res => {
       console.log('请求独家放送失败！', res)
     })
@@ -143,27 +135,24 @@ export default {
     //推荐新音乐
     _newSong().then(res => {
       // console.log(res.data.result)
-      if(res.data.code === 200){
-        let arr = []
-        arr.push(res.data.result.slice(0, 5), res.data.result.slice(5, 10))
-        this.newSong = arr
-        // console.log(this.newSong)
-      }
+      let arr = []
+      let result = res.data.result
+      arr.push(this.processSong(result.slice(0, 5), 0), this.processSong(result.slice(5, 10), 5))
+      this.newSong = arr
+      // console.log(this.newSong)
     }).catch(res => {
       console.log('获取推荐新音乐失败！', res)
     })
 
     //推荐MV
     _getMV().then(res => {
-      console.log(res.data)
-      if(res.data.code === 200){
-        let arr = res.data.result.slice(0, 3)
-        arr.forEach(val => {
-          val.playCount = val.playCount < 100000 ? val.playCount : Math.floor(val.playCount/10000) + '万'
-        });
-        this.getMV = arr
-        console.log(this.getMV)
-      }
+      // console.log(res.data)
+      let arr = res.data.result.slice(0, 3)
+      arr.forEach(val => {
+        val.playCount = this.$transPlayCount(val.playCount)
+      });
+      this.getMV = arr
+      // console.log(this.getMV)
     }).catch(res => {
       console.log('获取推荐MV失败！', res)
     })
@@ -176,6 +165,27 @@ export default {
           id
         }
       })
+    },
+    processSong(arr, offset){                             //处理音乐对象    
+      let songArr = []
+      arr.forEach((val, index) => {
+        index = index + offset + 1
+        let obj = {
+          id: val.id,
+          index: this.$addZero(index),
+          picUrl: val.picUrl,
+          name: val.name,
+          alia: val.song.alias[0] ? val.song.alias[0] : '',
+          singers: this.$transSinger(val.song.artists)
+        }
+        songArr.push(obj)
+      })
+
+      return songArr
+    },
+    addSongToList(song){
+      // console.log(song)
+      this.$store.commit('addSong', song)
     }
   }
 }

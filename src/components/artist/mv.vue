@@ -28,28 +28,18 @@ export default {
   props: ['id'],
   created(){
     _getArtistMvInfo(this.id).then(res => {
-      if(res.data.code === 200){
-        // console.log(res.data.mvs)
-        //处理显示听歌单人数和mv时长的输出格式
-        res.data.mvs.forEach(val => {
-          val.playCount = val.playCount < 100000 ? val.playCount : Math.floor(val.playCount/10000) + '万'       
-          val.duration = this.transTimeLen(val.duration)
-        });
-        this.mvs = res.data.mvs
-      }
+      // console.log(res.data.mvs)
+      //处理显示听歌单人数和mv时长的输出格式
+      res.data.mvs.forEach(val => {
+        val.playCount = this.$transPlayCount(val.playCount)      
+        val.duration = this.$transDuration(val.duration)
+      });
+      this.mvs = res.data.mvs
     }).catch(res => {
       console.log('请求此歌手mv失败！', res)
     })
   },
   methods: {
-    transTimeLen(time){                        //处理时长输出格式
-      time = Math.floor(time / 1000)
-      let min = Math.floor(time / 60)
-      let se = time % 60
-      min = min < 10 ? '0' + min : min
-      se = se < 10 ? '0' + se : se
-      return min + ':' + se
-    },
   }
 }
 </script>

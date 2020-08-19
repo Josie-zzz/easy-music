@@ -12,19 +12,19 @@
         </tr>
       </thead>
       <tbody v-if="songs">
-        <tr v-for="(song, index) in songs" :key="'song' + index">
+        <tr v-for="(song, index) in songs" :key="'song' + index" @dblclick="addSongToList(song)">
           <td style="text-align: right;">{{ song.index }}</td>
           <td class="iconfont">
             <span style="margin-right:5px;">&#xe60f;</span>
             <span>&#xe63a;</span>
           </td>
           <td>
-            <span style="color:#000;margin-right:5px">{{ song.musicTitle }}</span>
-            <span v-if="song.musicAlia">{{ song.musicAlia }}</span>
+            <span style="color:#000;margin-right:5px">{{ song.name }}</span>
+            <span v-if="song.alia">{{ song.alia }}</span>
           </td>
           <td>{{ song.singers }}</td>
           <td>{{ song.album }}</td>
-          <td>{{ song.timeLen }}</td>
+          <td>{{ song.duration }}</td>
         </tr>
       </tbody>
     </table>
@@ -33,7 +33,13 @@
 
 <script>
 export default {
-  props: ['songs']
+  props: ['songs'],
+  methods: {
+    addSongToList(song){
+      // console.log(song)
+      this.$store.commit('addSong', song)
+    },
+  }
 }
 </script>
 

@@ -2,6 +2,7 @@ import Vue from "vue";
 import App from "@/App.vue";
 import router from "./router";
 import store from "./store";
+import './util'                       //工具函数，处理音乐对象，因为多个组件都会用到，所以挂载到prototype上
 import './assets/css/reset.scss';
 import './assets/css/element-variables.scss';
 import './assets/icon/iconfont.css';
@@ -23,13 +24,27 @@ import {
   Carousel,
   CarouselItem,
   Button,
-  Pagination
+  Pagination,
+  MessageBox,
+  Message,
+  Slider
 } from 'element-ui';
 Vue.use(Input)
 Vue.use(Carousel)
 Vue.use(CarouselItem)
 Vue.use(Button)
 Vue.use(Pagination)
+Vue.use(Slider)
+
+MessageBox.install = function (Vue) {
+  Vue.prototype.$MessageBox = MessageBox
+}
+Vue.use(MessageBox)
+
+Message.install = function (Vue) {
+  Vue.prototype.$Message = Message
+}
+Vue.use(Message)
 
 Vue.config.productionTip = false;
 

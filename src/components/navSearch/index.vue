@@ -118,17 +118,14 @@ export default {
       this.placeholder = ''
 
       if(this.searchVal === '' && !this.getFocus){   //当输入框没有值并且第一次获得焦点才请求热搜
-        _getHotSearch().then(res => {
-          if(res.data.code === 200){        //获取到热搜信息
-            this.hotSearch = res.data.data
-            // console.log(this.hotSearch)
-          }
+        _getHotSearch().then(res => {  //获取到热搜信息
+          this.hotSearch = res.data.data
+          // console.log(this.hotSearch)
         }).catch(res => {
           console.log('请求热搜接口失败！', res)
         });
 
         this.showSuggest = 1
-
         this.getFocus = true
       }
       
@@ -148,49 +145,40 @@ export default {
 
         _getSuggest(this.searchVal).then(res => {
           // console.log(res.data)
-          if(res.data.code === 200){
+          let result = res.data.result
+          //先清空这三个值
+          this.songs = null
+          this.albums = null
+          this.artists = null
+          if(result.songs){
+            let arr = []
+            result.songs.forEach(song => {
+              let str = `${song.name} - `
+              song.artists.forEach(value => {
+                str = str + '  ' + value.name
+              });
+              arr.push(str)
+            })
 
-            let result = res.data.result
-            //先清空这三个值
-            this.songs = null
-            this.albums = null
-            this.artists = null
-            if(result.songs){
-              let arr = []
-              
-              result.songs.forEach(song => {
-                let str = `${song.name} - `
+            this.songs = arr
+          }
+          if(result.albums){
+            // console.log(result.albums)
+            let arr = []
+            result.albums.forEach(album => {
+              let str = `${album.name} - ${album.artist.name}`
+              arr.push(str)
+            })
 
-                song.artists.forEach(value => {
-                  str = str + '  ' + value.name
-                });
+            this.albums = arr
+          }
+          if(result.artists){
+            let arr = []
+            result.artists.forEach(val => {
+              arr.push(val.name)
+            })
 
-                arr.push(str)
-              })
-
-              this.songs = arr
-            }
-            if(result.albums){
-              // console.log(result.albums)
-              let arr = []
-              
-              result.albums.forEach(album => {
-                let str = `${album.name} - ${album.artist.name}`
-
-                arr.push(str)
-              })
-
-              this.albums = arr
-            }
-            if(result.artists){
-              let arr = []
-
-              result.artists.forEach(val => {
-                arr.push(val.name)
-              })
-
-              this.artists = arr
-            }
+            this.artists = arr
           }
         }).catch(res => {
           console.log('请求搜索建议接口失败！', res)
@@ -329,7 +317,7 @@ export default {
     left: 252px;
     z-index: 1000;
     background-color: #fff;
-    box-shadow: 0px 0px 10px 0px rgb(0,0,0,0.1);
+    box-shadow: 0px 0px 10px 0px rgb(0,0,0,0.3);
 
     &::before {
       position: absolute;

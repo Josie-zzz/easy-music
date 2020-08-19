@@ -70,11 +70,9 @@ export default {
     getComments(){                             //获取歌单评论
       _getSongListComments(this.id).then(res => {
         // console.log(res.data)
-        if(res.data.code === 200){
-          this.hotComments = this.transCommTime(res.data.hotComments)
-          this.comments = this.transCommTime(res.data.comments)
-          // console.log(this.hotComments, this.comments)
-        }
+        this.hotComments = this.transCommTime(res.data.hotComments)
+        this.comments = this.transCommTime(res.data.comments)
+        // console.log(this.hotComments, this.comments)
       }).catch(res => {
         console.log('请求歌曲列表评论失败！', res)
       })
@@ -109,8 +107,8 @@ export default {
         year: obj.getFullYear(),
         month: obj.getMonth() + 1,
         date: obj.getDate(),
-        hours: obj.getHours() < 10 ? '0' + obj.getHours() : obj.getHours(),
-        min: obj.getMinutes() < 10 ? '0' + obj.getMinutes() : obj.getMinutes()
+        hours: this.$addZero(obj.getHours()),
+        min: this.$addZero(obj.getMinutes())
       }
     }
   }

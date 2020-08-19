@@ -27,10 +27,8 @@ export default {
   methods: {
     getSubscribers(){
       _getSubscribers(this.id, 120).then(res => {
-        if(res.data.code === 200){
-          // console.log(res.data.subscribers)
-          this.subscribers = res.data.subscribers
-        }
+        // console.log(res.data.subscribers)
+        this.subscribers = res.data.subscribers
       }).catch(res => {
         console.log('请求订阅者失败！', res)
       })

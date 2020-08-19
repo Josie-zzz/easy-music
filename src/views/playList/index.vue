@@ -25,10 +25,10 @@
             <div class="play2">
               <img class="creator" :src="playTitle.avatarUrl">
               <div style="margin-right: 15px;font-size:14px;color:rgba(37, 37, 37, 1);">{{ playTitle.nickname }}</div>
-              <div style="font-size:12px;color:rgba(37, 37, 37, 0.8);">{{ playTitle.birthday }}</div>
+              <div style="font-size:12px;color:rgba(37, 37, 37, 0.8);">{{ playTitle.birthday }}创建</div>
             </div>
             <div class="play3">
-              <button style="background-color: rgb(198, 47, 47);color: rgb(255, 255, 255);">播放全部</button>
+              <button style="background-color: rgb(198, 47, 47);color: rgb(255, 255, 255);" @click="addSongListToList(songs)">播放全部</button>
               <button style="background-color: #fff;border: solid 1px #e1e1e2;">收藏({{playTitle.subscribedCount}})</button>
               <button style="background-color: #fff;border: solid 1px #e1e1e2;">分享({{playTitle.shareCount}})</button>
             </div>
@@ -47,7 +47,7 @@
           <div>
             <ul class="playList-bar">
               <li :class="[currentCom === 'Songs' ? 'checked2' : '']"  @click="() => switchTo('Songs')">歌曲列表</li>
-              <li :class="[currentCom === 'Comments' ? 'checked2' : '']" @click="() => switchTo('Comments')">评论{{ commentCount }}</li>
+              <li :class="[currentCom === 'Comments' ? 'checked2' : '']" @click="() => switchTo('Comments')">评论<span v-if="commentCount">{{ '(' + commentCount + ')' }}</span></li>
               <li :class="[currentCom === 'Subscribers' ? 'checked2' : '']" @click="() => switchTo('Subscribers')">收藏者</li>
             </ul>
           </div>
@@ -100,10 +100,8 @@ export default {
       if(this.id){
         await _getPlayList(this.id).then(res => {
           // console.log(res.data)
-          if(res.data.code === 200){
-            this.processPlayList(res.data.playlist)
-            this.trackIds = res.data.playlist.trackIds
-          }
+          this.processPlayList(res.data.playlist)
+          this.trackIds = res.data.playlist.trackIds
         }).catch(res => {
           console.log('获取详细信息失败！', res)
         })
@@ -118,11 +116,9 @@ export default {
       // console.log(trackIds)
       //根据歌单列表请求所有歌曲
       _getSongDetail(trackIds).then(res => {
-        if(res.data.code === 200){
-          // console.log('res.data.songs', res.data.songs)
-          //处理songs的信息再储存
-          this.processSongs(res.data.songs)
-        }
+        // console.log('res.data.songs', res.data.songs)
+        //处理songs的信息再储存
+        this.processSongs(res.data.songs)
       }).catch(res => {
         console.log('请求歌曲详细信息失败！', res)
       })
@@ -133,10 +129,10 @@ export default {
         coverImgUrl: playlist.coverImgUrl,
         name: playlist.name,
         trackCount: playlist.trackCount,
-        playCount: this.transCount(playlist.playCount),
+        playCount: this.$transPlayCount(playlist.playCount),
         avatarUrl: playlist.creator.avatarUrl,
         nickname: playlist.creator.nickname,
-        birthday: this.transDate(playlist.createTime),
+        birthday: this.$transDate(playlist.createTime),
         subscribedCount: playlist.subscribedCount,
         shareCount: playlist.shareCount,
         tags: this.transTags(playlist.tags),
@@ -147,15 +143,8 @@ export default {
       //储存当前歌单的所有歌曲
       this.trackIds = playlist.trackIds
       //当前评论数
-      this.commentCount = '(' + playlist.commentCount + ')'
+      this.commentCount = playlist.commentCount 
       // console.log(this.trackIds)
-    },
-    transDate(date){                           //处理日期输出格式
-      let d = new Date(date)
-      return `${d.getFullYear()}-${d.getUTCMonth() + 1}-${d.getUTCDate()}创建`
-    },
-    transCount(count){                         //处理播放数格式
-      return count < 100000 ? count : Math.floor(count / 10000) + '万'
     },
     transTags(tags){                           //拼接所有tags标签
       let str = ''
@@ -173,37 +162,33 @@ export default {
       oldSongs.forEach((val, index) => {
         index = index + 1
         let obj = {
-          index: index < 10 ? '0' + index : index,
-          musicTitle: val.name,
-          musicAlia: val.alia[0] ? val.alia[0] : '',
-          singers: this.transSinger(val.ar),
+          id: val.id,
+          index: this.$addZero(index),   
+          name: val.name,
+          alia: val.alia[0] ? val.alia[0] : '',
+          singers: this.$transSinger(val.ar),
           album: val.al.name,
-          timeLen: this.transTimeLen(val.dt)
+          duration: this.$transDuration(val.dt)
         }
         newSongs.push(obj)
       })
       this.songs = newSongs
       // console.log(this.songs)
     },
-    transSinger(ar){                           //拼接所有歌手
-      let str = ''
-      let len = ar.length
-      ar.forEach((val, index) => {
-        let name = val.name
-        if(index < len - 1){
-          name = name + '/'
-        }
-        str = str + name
+    addSongListToList(songList){
+      this.$MessageBox.confirm('点击全部播放会替换掉当前播放列表，是否继续？', '替换播放列表', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$store.commit('addSongList', songList)
+        this.$Message({
+          type: 'success',
+          message: '替换成功'
+        });
+      }).catch(() => {
+        console.log('取消被点击了')
       })
-      return str
-    },
-    transTimeLen(time){                        //处理时长输出格式
-      time = Math.floor(time / 1000)
-      let min = Math.floor(time / 60)
-      let se = time % 60
-      min = min < 10 ? '0' + min : min
-      se = se < 10 ? '0' + se : se
-      return min + ':' + se
     }
   }
 }
@@ -280,6 +265,10 @@ export default {
 
           &:hover {
             cursor: pointer;
+          }
+
+          &:focus {
+            outline: none !important;
           }
         }
       }

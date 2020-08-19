@@ -26,13 +26,11 @@ export default {
   props: ['id'],
   created(){
     _getArtistDesc(this.id).then(res => {
-      if(res.data.code === 200){
-        this.briefDesc = res.data.briefDesc
-        res.data.introduction.forEach(val => {
-          val.txt = val.txt.split('\n')
-        })
-        this.introduction = res.data.introduction
-      }
+      this.briefDesc = res.data.briefDesc
+      res.data.introduction.forEach(val => {
+        val.txt = val.txt.split('\n')
+      })
+      this.introduction = res.data.introduction
     }).catch(res => {
       console.log('获取歌手描述信息失败！', res)
     })

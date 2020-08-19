@@ -10,3 +10,23 @@ export function _getTopSongs(type){
     }
   })
 }
+
+//判断音乐是否可用,id为音乐id
+export function _checkMusic(id){    
+  return http({
+    url: '/check/music',
+    params: {
+      id
+    }
+  })
+}
+
+//获得音乐url
+export function _getSongUrl(id){    
+  return http({
+    url: '/song/url',
+    params: {
+      id
+    }
+  })
+}
