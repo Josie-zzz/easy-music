@@ -55,7 +55,7 @@
     </template>
     <div style="display:flex;flex-direction: row;justify-content: center;">
       <el-pagination
-        v-if="albumLen"
+        v-if="albumLen > 1"
         layout="prev, pager, next"
         :page-count="albumLen"
         :current-page="currentPage"
@@ -87,7 +87,7 @@ export default {
       if(this.artist){
         return Math.ceil(this.artist.albumSize / this.limit)
       } else {
-        return 0
+        return 1
       }
     }
   },

@@ -21,10 +21,20 @@ export function _checkMusic(id){
   })
 }
 
-//获得音乐url
+//获得音乐url,id为音乐id
 export function _getSongUrl(id){    
   return http({
     url: '/song/url',
+    params: {
+      id
+    }
+  })
+}
+
+//获取歌词,id为音乐id
+export function _getLyric(id){    
+  return http({
+    url: '/lyric',
     params: {
       id
     }

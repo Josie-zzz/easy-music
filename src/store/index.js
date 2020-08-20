@@ -5,10 +5,16 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    keyWords: '',                 //搜索的keyWords
+
     musicList: [],                 //播放列表
     nowSongIndex: -1,              //当前要播放歌曲的索引值，-1表示当前没有歌曲要播放
   },
   mutations: {
+    changeKeyWords(state, words){              //改变keyWords
+      state.keyWords = words
+    },
+
     addSong(state, song){                     //添加单曲到列表中
       //先判断列表中是否有这首歌,没有才添加单曲,有这首歌将当前索引指向它
       let index = state.musicList.findIndex(val => val.id === song.id)

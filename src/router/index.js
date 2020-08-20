@@ -16,6 +16,7 @@ import Video from '@/views/video'
 
 import PlayList from '@/views/playList'
 import Artist from '@/views/artist'
+import SearchInfo from '@/views/searchInfo'
 
 export default new VueRouter({
   routes: [
@@ -78,6 +79,11 @@ export default new VueRouter({
       path: '/artist',
       name: 'artist',
       component: Artist
-    }
+    },
+    {
+      path: '/searchInfo',
+      name: 'searchInfo',
+      component: SearchInfo
+    },
   ]
 })
