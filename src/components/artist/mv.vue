@@ -1,16 +1,19 @@
 <template>
   <div class="mv">
-    <div class="mvBox" v-for="(mv, index) in mvs" :key="'mv' + index">
-      <div class="mvImg">
-        <img :src="mv.imgurl16v9" />
-        <div class="playCount">
-          <div class="iconfont">&#xe652;</div>
-          <div>{{ mv.playCount }}</div>
+    <template v-if="mvs.length">
+      <div class="mvBox" v-for="(mv, index) in mvs" :key="'mv' + index" @click="toPath(mv.id)">
+        <div class="mvImg">
+          <img :src="mv.imgurl16v9" />
+          <div class="playCount">
+            <div class="iconfont">&#xe652;</div>
+            <div>{{ mv.playCount }}</div>
+          </div>
+          <div class="duration">{{ mv.duration }}</div>
         </div>
-        <div class="duration">{{ mv.duration }}</div>
+        <p style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ mv.name }}</p>
       </div>
-      <p style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ mv.name }}</p>
-    </div>
+    </template>
+    <div v-if="noMvs">{{ noMvs }}</div>
   </div>
 </template>
 
@@ -22,10 +25,11 @@ import {
 export default {
   data(){
     return {
-      mvs: null,                //此歌手的mv
+      mvs: [],                //此歌手的mv,有的歌手没有mv
+      noMvs: '',              //没有mv的显示
     }
   },
-  props: ['id'],
+  props: ['id', 'artist'],
   created(){
     _getArtistMvInfo(this.id).then(res => {
       // console.log(res.data.mvs)
@@ -35,11 +39,23 @@ export default {
         val.duration = this.$transDuration(val.duration)
       });
       this.mvs = res.data.mvs
+      if(!this.mvs.length){
+        this.noMvs = '此歌手暂时还没有mv哦！'
+      }
     }).catch(res => {
       console.log('请求此歌手mv失败！', res)
     })
   },
   methods: {
+    toPath(id){
+      this.$router.push({
+        name: 'audio',
+        query: {
+          id,
+          type: 'mv'
+        }
+      })
+    }
   }
 }
 </script>
@@ -65,7 +81,7 @@ export default {
 
       img {
         width: 180px;
-        height: 100px;
+        // height: 100px;
       }
 
       .playCount {

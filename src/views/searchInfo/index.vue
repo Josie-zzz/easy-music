@@ -7,14 +7,14 @@
           <span v-if="currentCom === 'Songs'">{{ songsDescr }}</span>
           <span v-if="currentCom === 'AritistList'">{{ aritistListDescr }}</span>
           <span v-if="currentCom === 'PlayList'">{{ playListDescr }}</span>
-          <span v-if="currentCom === 'Vidio'">{{ vidioDescr }}</span>
+          <span v-if="currentCom === 'Video'">{{ videoDescr }}</span>
         </div>
         <div>
           <ul class="playList-bar">
             <li :class="[currentCom === 'Songs' ? 'checked2' : '']"  @click="() => switchTo('Songs')">单曲</li>
             <li :class="[currentCom === 'AritistList' ? 'checked2' : '']"  @click="() => switchTo('AritistList')">歌手</li>
             <li :class="[currentCom === 'PlayList' ? 'checked2' : '']" @click="() => switchTo('PlayList')">歌单</li>
-            <li :class="[currentCom === 'Vidio' ? 'checked2' : '']" @click="() => switchTo('Vidio')">视频</li>
+            <li :class="[currentCom === 'Video' ? 'checked2' : '']" @click="() => switchTo('Video')">视频</li>
           </ul>
         </div>
         <keep-alive>
@@ -33,7 +33,7 @@
 import Songs from '@/components/searchInfo/songs'
 import AritistList from '@/components/searchInfo/aritistList'
 import PlayList from '@/components/searchInfo/playList'
-import Vidio from '@/components/searchInfo/vidio'
+import Video from '@/components/searchInfo/video'
 
 import { mapState } from 'vuex'
 
@@ -44,7 +44,7 @@ export default {
       songsDescr: '',                                  //(找到了12首歌)
       aritistListDescr: '',                            //歌手      
       playListDescr: '',                               //歌单
-      vidioDescr: '',                                  //视频
+      videoDescr: '',                                  //视频
     }
   },
   computed: {
@@ -54,7 +54,7 @@ export default {
     Songs,
     AritistList,
     PlayList,
-    Vidio
+    Video
   },
   methods: {
     switchTo(com){
@@ -65,7 +65,7 @@ export default {
         case 'Songs': this.songsDescr = str;break;
         case 'AritistList': this.aritistListDescr = str;break;
         case 'PlayList': this.playListDescr = str;break;
-        case 'Vidio': this.vidioDescr = str;break;
+        case 'Video': this.videoDescr = str;break;
       }
     }
   }

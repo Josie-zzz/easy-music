@@ -54,6 +54,7 @@ export default {
       // console.log(val)
       this.songs = null
       this.currentPage = 1
+      this.songsNum = -1
       this.getSearchInfo(val, 1, (this.currentPage - 1) * this.limit)
     }
   },

@@ -1,5 +1,5 @@
 <template>
-  <div class="playList">
+  <div class="playListSearch">
     <template v-if="playListNum > 0">
       <div>
         <table v-if="playLists" class="playListTable">
@@ -48,6 +48,14 @@ export default {
     }
   },
   props: ['keyWords'],
+  watch: {
+    keyWords(val){            //当搜索关键字变化的时候，下面内容必须要跟着变化
+      this.playLists = null,
+      this.playListNum = -1
+      this.currentPage = 1
+      this.getSearchInfo(val, 1000, (this.currentPage - 1) * this.limit)
+    }
+  },
   created(){
     this.getSearchInfo(this.keyWords, 1000, (this.currentPage - 1) * this.limit)
   },
@@ -93,32 +101,34 @@ export default {
 </script>
 
 <style lang="scss">
-.playListTable {
-  table-layout: fixed;
-  width: 100%;
-  font-size: 12px;
-  color: rgb(37,37,37,0.8);
-  border: 1px solid rgb(37,37,37,0.1);
-  margin-bottom: 30px;
+.playListSearch {
+  .playListTable {
+    table-layout: fixed;
+    width: 100%;
+    font-size: 12px;
+    color: rgb(37,37,37,0.8);
+    border: 1px solid rgb(37,37,37,0.1);
+    margin-bottom: 30px;
 
-  img{
-    width: 40px;
-    height: 40px;
-  }
+    img{
+      width: 40px;
+      height: 40px;
+    }
 
-  td {
-    padding: 10px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
+    td {
+      padding: 10px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
 
-  tr:nth-child(odd){
-    background-color: #f5f5f7;
-  }
+    tr:nth-child(odd){
+      background-color: #f5f5f7;
+    }
 
-  tr:hover {
-    background-color: #ebeced;
+    tr:hover {
+      background-color: #ebeced;
+    }
   }
 }
 </style>

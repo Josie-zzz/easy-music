@@ -68,7 +68,7 @@
         <!-- <div class="more">更多></div> -->
       </div>
       <div class="getMvBox">
-        <div class="mvBox" v-for="(mv, index) in getMV" :key="'getmv' + index">
+        <div class="mvBox" v-for="(mv, index) in getMV" :key="'getmv' + index" @click="toPath(mv.id)">
           <img :src="mv.picUrl" />
           <p>{{ mv.name }}</p>
           <p style="font-size:12px;color:rgba(37, 37, 37, 0.8);">{{ mv.artists[0].name }}</p>
@@ -186,6 +186,15 @@ export default {
     addSongToList(song){
       // console.log(song)
       this.$store.commit('addSong', song)
+    },
+    toPath(id){
+      this.$router.push({
+        name: 'audio',
+        query: {
+          id,
+          type: 'mv'
+        }
+      })
     }
   }
 }
@@ -281,6 +290,7 @@ export default {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    flex-wrap: wrap;
     padding-top: 15px;
 
     .priBox {

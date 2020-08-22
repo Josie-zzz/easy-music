@@ -46,6 +46,14 @@ export default {
     }
   },
   props: ['keyWords'],
+  watch: {
+    keyWords(val){            //当搜索关键字变化的时候，下面内容必须要跟着变化
+      this.artists = null,
+      this.artistNum = -1
+      this.currentPage = 1
+      this.getSearchInfo(val, 100, (this.currentPage - 1) * this.limit)
+    }
+  },
   created(){
     this.getSearchInfo(this.keyWords, 100, (this.currentPage - 1) * this.limit)
   },

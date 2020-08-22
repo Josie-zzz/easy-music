@@ -44,6 +44,15 @@
           </div>
         </div>
       </div>
+      <div style="display:flex;flex-direction: row;justify-content: center;">
+        <el-pagination
+          v-if="commentsPage > 1"
+          layout="prev, pager, next"
+          :page-count="commentsPage"
+          :current-page="currentPage"
+          @current-change="currentChange"
+        ></el-pagination>
+      </div>
     </div>
   </div>
 </template>
@@ -52,25 +61,72 @@
 import {
   _getSongListComments
 } from '@/ajax/discover'
+import {
+  _getCommentVideo,
+  _getCommentMv
+} from '@/ajax/video'
  
 export default {
   data(){
     return {
       message: '',                            //你想输入的评论
-      hotComments: [],                      //热门评论
+      hotComments: [],                      //热门评论,这里的两个值为数组形式，因为有时候会返回没有评论的[]
       comments: [],                         //评论信息
+      currentPage: 1,
+      limit: 30,
     }
   },
-  props: ['id'],
-  created(){
-    //获取当前歌单评论信息
-    this.getComments()
+  props: ['id', 'commentCount', 'commentType'],             //这个comment的组件歌单，视频，mv等都在用，用commentType区分
+  computed: {
+    commentsPage(){
+      if(this.commentCount){
+        return Math.ceil(this.commentCount / this.limit)
+      } else {
+        return 1
+      }
+    }
   },
-  methods: {
-    getComments(){                             //获取歌单评论
-      _getSongListComments(this.id).then(res => {
+  created(){
+      this.switchRequest()
+  },
+  methods: {              //判断完type后在请求
+    switchRequest(){
+      switch(this.commentType){
+        case 'playList': this.getComments(this.id, (this.currentPage - 1) * this.limit);break;   //获取当前歌单评论信息
+        case 'mv': this.getCommentMv(this.id, (this.currentPage - 1) * this.limit);break;   //获取当前视频评论信息
+        case 'video': this.getCommentVideo(this.id, (this.currentPage - 1) * this.limit);break;   //获取当前mv评论信息
+      }
+    },  
+    getComments(id, offset, limit = this.limit){                             //获取歌单评论
+      _getSongListComments(id, offset, limit).then(res => {
         // console.log(res.data)
-        this.hotComments = this.transCommTime(res.data.hotComments)
+        if(res.data.hotComments){       //分页的话只有第一页有
+          this.hotComments = this.transCommTime(res.data.hotComments)
+        }
+        this.comments = this.transCommTime(res.data.comments)
+        // console.log(this.hotComments, this.comments)
+      }).catch(res => {
+        console.log('请求歌曲列表评论失败！', res)
+      })
+    },
+    getCommentVideo(id, offset, limit = this.limit){                             //获取视频评论
+      _getCommentVideo(id, offset, limit).then(res => {
+        // console.log(res.data)
+        if(res.data.hotComments){       //分页的话只有第一页有
+          this.hotComments = this.transCommTime(res.data.hotComments)
+        }
+        this.comments = this.transCommTime(res.data.comments)
+        // console.log(this.hotComments, this.comments)
+      }).catch(res => {
+        console.log('请求歌曲列表评论失败！', res)
+      })
+    },
+    getCommentMv(id, offset, limit = this.limit){                             //获取mv评论
+      _getCommentMv(id, offset, limit).then(res => {
+        // console.log(res.data)
+        if(res.data.hotComments){       //分页的话只有第一页有
+          this.hotComments = this.transCommTime(res.data.hotComments)
+        }
         this.comments = this.transCommTime(res.data.comments)
         // console.log(this.hotComments, this.comments)
       }).catch(res => {
@@ -110,6 +166,11 @@ export default {
         hours: this.$addZero(obj.getHours()),
         min: this.$addZero(obj.getMinutes())
       }
+    },
+    currentChange(page){
+      this.currentPage = page
+      this.comments = null
+      this.switchRequest()
     }
   }
 }

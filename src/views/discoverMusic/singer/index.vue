@@ -23,6 +23,7 @@
           <div style="font-size:12px;margin-top:5px;">{{ artist.name }}</div>
         </div>
       </div>
+      <!-- 因为请求的数据中没有歌手统计，所以这里就定量的写成5 -->
       <div style="display:flex;flex-direction: row;justify-content: center;">
         <el-pagination
           layout="prev, pager, next"

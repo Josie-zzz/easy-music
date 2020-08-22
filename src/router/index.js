@@ -12,11 +12,15 @@ import NewMusic from '@/views/discoverMusic/newMusic'
 
 import SelfFM from '@/views/selfFM'
 import Look from '@/views/look'
+
 import Video from '@/views/video'
+import Mv from '@/views/video/children/mv'
+import Video2 from '@/views/video/children/video'
 
 import PlayList from '@/views/playList'
 import Artist from '@/views/artist'
 import SearchInfo from '@/views/searchInfo'
+import Audio from '@/views/audio'
 
 export default new VueRouter({
   routes: [
@@ -68,7 +72,21 @@ export default new VueRouter({
     },
     {
       path: '/video',
-      component: Video
+      component: Video,
+      children: [
+        {
+          path: '/video',
+          redirect: '/video/mv'
+        },
+        {
+          path: '/video/mv',
+          component: Mv
+        },
+        {
+          path: '/video/video2',
+          component: Video2
+        }
+      ]
     },
     {
       path: '/playList',
@@ -84,6 +102,11 @@ export default new VueRouter({
       path: '/searchInfo',
       name: 'searchInfo',
       component: SearchInfo
+    },
+    {
+      path: '/audio',
+      name: 'audio',
+      component: Audio
     },
   ]
 })

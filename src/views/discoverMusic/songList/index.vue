@@ -18,8 +18,9 @@
       </div>
       <div style="display:flex;flex-direction: row;justify-content: center;">
         <el-pagination
+          v-if="songListPage > 1"
           layout="prev, pager, next"
-          :page-count="5"
+          :page-count="songListPage"
           :current-page="currentPage"
           @current-change="currentChange"
         ></el-pagination>
@@ -42,6 +43,16 @@ export default {
       songList: null,                //换页或者标签都会替换这个数组
       currentPage: 1,                //当前页码
       limit: 100,                     //限制每页数量，主要用于请求，写在这里比较方便
+      total: -1,                     //歌单总页数
+    }
+  },
+  computed: {
+    songListPage(){
+      if(this.total !== -1){
+        return Math.ceil(this.total / this.limit)
+      } else {
+        return 1
+      }
     }
   },
   created(){
@@ -65,6 +76,7 @@ export default {
     getTopPlayList(cat, offset, limit = this.limit){        //根据当前信息请求当前显示歌单
       _getTopPlayList(cat, offset, limit).then(res => {
         // console.log(res.data)
+        this.total = res.data.total
         //处理显示听歌单人数的输出格式
         res.data.playlists.forEach(val => {
           val.playCount = this.$transPlayCount(val.playCount)

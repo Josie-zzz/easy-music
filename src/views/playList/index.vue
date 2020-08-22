@@ -52,7 +52,7 @@
             </ul>
           </div>
           <keep-alive>
-            <component v-bind:is="currentCom" :songs="songs" :id="id"></component>
+            <component v-bind:is="currentCom" :commentCount="commentCount" :songs="songs" :id="id" commentType="playList"></component>
           </keep-alive>
         </div>
       </div>
